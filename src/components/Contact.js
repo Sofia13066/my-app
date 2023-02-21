@@ -1,33 +1,45 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import "../styles/Contact.css";
-import {base_url} from "../utils/constants";
+import {base_url, period_month} from "../utils/constants";
 
-class Contact extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            planets: ['wait...']
-        };
-    }
 
-    async fillPlanets(url) {
-        const response = await fetch(url);
-        const json = await response.json();
-        const planets = json.map(item => item.name);
-        this.setState({planets});
-    }
 
-    componentDidMount() {
-        this.fillPlanets(`${base_url}/v1/planets`);
-    }
+const Contact = () => {
 
-    componentWillUnmount() {
-        console.log('Contact unmounted')
-    }
+    const [planets, setPlanets] = useState();
 
-    render() {
-        return (
-            <div>
+   
+
+    useEffect(() => {
+
+        const planetsInLocalStorage = JSON.parse(localStorage.getItem('planets'));
+
+        if (planetsInLocalStorage && ((Date.now() - planetsInLocalStorage.time) < period_month)) {
+            setPlanets(planetsInLocalStorage);
+        } else {
+            fetch(`${base_url}/v1/planets`)
+                .then(response => response.json())
+                .then(data => {
+                    
+                    const planetsData = data.map(item => item.name);
+                    setPlanets({planets: planetsData})
+                    setPlanets(planetsData);
+                    const info = {
+                                payload: planetsData,
+                                time: Date.now()
+                            }
+                    
+                    localStorage.setItem('planets', JSON.stringify(info));
+                });
+        }
+        return () => console.log('AboutMe unmounted');
+    }, [])
+
+
+    return (
+        <div>
+           {planets && 
+           <div>
                 <form onSubmit={(e) => {
                     e.preventDefault();
                 }}>
@@ -36,7 +48,7 @@ class Contact extends React.Component {
                     </label>
                     <label>Planet
                         <select name="planet">{
-                            this.state.planets.map((item, index) => <option value={item} key={index}>{item}</option>)
+                            planets.payload.map((item, index) => <option value={item} key={index}>{item}</option>)
                         }
                         </select>
                     </label>
@@ -45,9 +57,9 @@ class Contact extends React.Component {
                     </label>
                     <input type="submit" value="Submit"/>
                 </form>
-            </div>
-        )
-    }
+            </div>}
+        </div>
+    );
 }
 
-export default Contact
+export default Contact;
