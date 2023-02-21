@@ -4,7 +4,7 @@ import AboutMe from "./AboutMe";
 import StarWars from "./StarWars";
 import Contact from "./Contact";
 import {navItems} from "../utils/constants";
-import "../styles/Contact.css";
+// import "../styles/Contact.css";
 
 const Main = ({currentPage}) => {
     switch (currentPage) {

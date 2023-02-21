@@ -20,21 +20,6 @@ header > h1 {
   border-color: #FFE818 !important;
 }
 
-.farGalaxy {
-  font-size: 1.8em;
-  letter-spacing: 0.2em;
-  line-height: 1.6;
-  text-align: justify;
-}
-
-.bottom-left {
-  border-bottom-left-radius: 15px;
-}
-
-.bottom-right {
-  border-bottom-right-radius: 15px;
-}
-
 .float-start img {
   box-shadow: rgba(60, 69, 67, 0.6) 10px 10px;
 }
